@@ -1,7 +1,9 @@
 package com.example.forecast
 
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.View
+import android.view.View.GONE
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -9,6 +11,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.forecast.Model.WeatherModel
 import com.example.forecast.Retrofit.IWeatherRequest
+import com.example.forecast.Retrofit.RetrofitClient
+import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -52,25 +56,19 @@ class MainActivity : AppCompatActivity() {
         pressure = findViewById(R.id.pressure)
         humidity = findViewById(R.id.humidity)
 
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
-        val client = OkHttpClient.Builder()
-            .addInterceptor(interceptor)
-            .build()
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.openweathermap.org/data/2.5/")
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
 
+        val retrofit = RetrofitClient.instance
         val getWeatherApi = retrofit.create(IWeatherRequest::class.java)
 
         val getWeather = getWeatherApi.getCurrentWeather(CITY, UNITS, KEY)
 
         getWeather.enqueue(object: Callback<WeatherModel> {
             override fun onFailure(call: Call<WeatherModel>, t: Throwable) {
-                Toast.makeText(this@MainActivity, t.message, Toast.LENGTH_LONG)
+                Toast.makeText(
+                    this@MainActivity,
+                            t.message,
+                            Toast.LENGTH_LONG)
                     .show()
             }
 
