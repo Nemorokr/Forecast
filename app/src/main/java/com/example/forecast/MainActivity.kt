@@ -2,20 +2,16 @@ package com.example.forecast
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ProgressBar
-import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.forecast.Model.WeatherModel
 import com.example.forecast.Retrofit.IWeatherRequest
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.forecast.Retrofit.RetrofitClient
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -32,6 +28,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var wind: TextView
     lateinit var pressure: TextView
     lateinit var humidity: TextView
+
+    lateinit var getWeatherApi: IWeatherRequest
 
     val CITY = "yekaterinburg, ru"
     val UNITS = "metric"
@@ -52,43 +50,43 @@ class MainActivity : AppCompatActivity() {
         pressure = findViewById(R.id.pressure)
         humidity = findViewById(R.id.humidity)
 
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
-        val client = OkHttpClient.Builder()
-            .addInterceptor(interceptor)
-            .build()
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.openweathermap.org/data/2.5/")
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+        val retrofit = RetrofitClient.instance
+        getWeatherApi = retrofit.create(IWeatherRequest::class.java)
 
-        val getWeatherApi = retrofit.create(IWeatherRequest::class.java)
+        fetchData()
+    }
 
-        val getWeather = getWeatherApi.getCurrentWeather(CITY, UNITS, KEY)
+    private fun fetchData() {
+        val compositeDisposable = CompositeDisposable()
+        compositeDisposable.add(getWeatherApi.getCurrentWeather(CITY, UNITS, KEY)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { WeatherModel -> displayWeather(WeatherModel)},
+                { onError(t = it)}
+            )
+        )
+    }
 
-        getWeather.enqueue(object: Callback<WeatherModel> {
-            override fun onFailure(call: Call<WeatherModel>, t: Throwable) {
-                Toast.makeText(this@MainActivity, t.message, Toast.LENGTH_LONG)
-                    .show()
-            }
+    private fun displayWeather(weather: WeatherModel) {
+        val data = weather
 
-            override fun onResponse(call: Call<WeatherModel>, response: Response<WeatherModel>) {
+        address.text = data.address
+        updatedAt.text = "Updated at: "+ SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(Date(data!!.updatedAt*1000))
+        status.text = data.weatherDescription[0].status.capitalize()
+        temp.text = data.main.temp +"°C"
+        tempFielsLike.text = "Real Feel: " + data.main.tempFielsLike + "°C"
+        sunrise.text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(data.sys.sunrise*1000))
+        sunset.text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(data.sys.sunset*1000))
+        wind.text = data.wind.windspeed
+        pressure.text = data.main.pressure
+        humidity.text = data.main.humidity
+    }
 
-                val jsonObj = response.body()
-
-                address.text = jsonObj?.address.toString()
-                updatedAt.text = "Updated at: "+ SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(Date(jsonObj!!.updatedAt*1000))
-                status.text = jsonObj.weatherDescription[0].status.capitalize()
-                temp.text = jsonObj.main.temp + "°C"
-                tempFielsLike.text = "Fiels Like: " + jsonObj.main.tempFielsLike +"°C"
-                sunrise.text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(jsonObj.sys.sunrise*1000))
-                sunset.text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(jsonObj.sys.sunset*1000))
-                wind.text = jsonObj.wind.windspeed
-                pressure.text = jsonObj.main.pressure
-                humidity.text = jsonObj.main.humidity
-            }
-        })
+    private fun onError (t: Throwable) {
+        mainContainer.visibility = View.GONE
+        errorText.visibility = View.VISIBLE
+        errorText.text = t.message
     }
 }
