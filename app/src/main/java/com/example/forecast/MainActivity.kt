@@ -1,10 +1,7 @@
 package com.example.forecast
 
-import android.opengl.Visibility
 import android.os.Bundle
 import android.view.View
-import android.view.View.GONE
-import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -12,14 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.forecast.Model.WeatherModel
 import com.example.forecast.Retrofit.IWeatherRequest
 import com.example.forecast.Retrofit.RetrofitClient
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -36,6 +29,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var wind: TextView
     lateinit var pressure: TextView
     lateinit var humidity: TextView
+
+    lateinit var getWeatherApi: IWeatherRequest
 
     val CITY = "yekaterinburg, ru"
     val UNITS = "metric"
@@ -57,36 +52,42 @@ class MainActivity : AppCompatActivity() {
         humidity = findViewById(R.id.humidity)
 
 
-
         val retrofit = RetrofitClient.instance
-        val getWeatherApi = retrofit.create(IWeatherRequest::class.java)
+        getWeatherApi = retrofit.create(IWeatherRequest::class.java)
 
-        val getWeather = getWeatherApi.getCurrentWeather(CITY, UNITS, KEY)
+        fetchData()
+    }
 
-        getWeather.enqueue(object: Callback<WeatherModel> {
-            override fun onFailure(call: Call<WeatherModel>, t: Throwable) {
-                Toast.makeText(
-                    this@MainActivity,
-                            t.message,
-                            Toast.LENGTH_LONG)
-                    .show()
-            }
+    private fun fetchData() {
+        val compositeDisposable = CompositeDisposable()
+        compositeDisposable.add(getWeatherApi.getCurrentWeather(CITY, UNITS, KEY)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { WeatherModel -> displayWeather(WeatherModel)},
+                { onError()}
+            )
+        )
+    }
 
-            override fun onResponse(call: Call<WeatherModel>, response: Response<WeatherModel>) {
+    private fun displayWeather(weather: WeatherModel) {
+        val data = weather
 
-                val jsonObj = response.body()
+        address.text = data.address
+        updatedAt.text = "Updated at: "+ SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(Date(data!!.updatedAt*1000))
+        status.text = data.weatherDescription[0].status.capitalize()
+        temp.text = data.main.temp +"°C"
+        tempFielsLike.text = "Real Feel: " + data.main.tempFielsLike + "°C"
+        sunrise.text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(data.sys.sunrise*1000))
+        sunset.text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(data.sys.sunset*1000))
+        wind.text = data.wind.windspeed
+        pressure.text = data.main.pressure
+        humidity.text = data.main.humidity
+    }
 
-                address.text = jsonObj?.address.toString()
-                updatedAt.text = "Updated at: "+ SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(Date(jsonObj!!.updatedAt*1000))
-                status.text = jsonObj.weatherDescription[0].status.capitalize()
-                temp.text = jsonObj.main.temp + "°C"
-                tempFielsLike.text = "Fiels Like: " + jsonObj.main.tempFielsLike +"°C"
-                sunrise.text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(jsonObj.sys.sunrise*1000))
-                sunset.text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(jsonObj.sys.sunset*1000))
-                wind.text = jsonObj.wind.windspeed
-                pressure.text = jsonObj.main.pressure
-                humidity.text = jsonObj.main.humidity
-            }
-        })
+    private fun onError () {
+        mainContainer.visibility = View.GONE
+        Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG)
+            .show()
     }
 }
