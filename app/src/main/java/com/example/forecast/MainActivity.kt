@@ -2,7 +2,6 @@ package com.example.forecast
 
 import android.os.Bundle
 import android.view.View
-import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -65,7 +64,7 @@ class MainActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { WeatherModel -> displayWeather(WeatherModel)},
-                { onError()}
+                { onError(t = it)}
             )
         )
     }
@@ -85,9 +84,9 @@ class MainActivity : AppCompatActivity() {
         humidity.text = data.main.humidity
     }
 
-    private fun onError () {
+    private fun onError (t: Throwable) {
         mainContainer.visibility = View.GONE
-        Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG)
-            .show()
+        errorText.visibility = View.VISIBLE
+        errorText.text = t.message
     }
 }
