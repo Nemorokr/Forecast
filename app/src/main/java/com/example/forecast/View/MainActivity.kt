@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity(), WeatherInterface {
         val data = weather
 
         address.text = data.address
-        updatedAt.text = "Updated at: "+ SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(Date(data!!.updatedAt*1000))
+        updatedAt.text = "Updated at: "+ SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(Date(data.updatedAt*1000))
         status.text = data.weatherDescription[0].status.capitalize()
         temp.text = data.main.temp +"°C"
         tempFielsLike.text = "Real Feel: " + data.main.tempFielsLike + "°C"
