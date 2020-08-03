@@ -1,13 +1,13 @@
-package com.example.forecast
+package com.example.forecast.View
 
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.forecast.Model.WeatherModel
-import com.example.forecast.Retrofit.IWeatherRequest
-import com.example.forecast.Retrofit.RetrofitClient
+import com.example.forecast.R
+import com.example.forecast.Presenter.Retrofit.IWeatherRequest
+import com.example.forecast.Presenter.Retrofit.RetrofitClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), WeatherInterface {
 
     lateinit var address: TextView
     lateinit var updatedAt: TextView
@@ -54,26 +54,30 @@ class MainActivity : AppCompatActivity() {
         val retrofit = RetrofitClient.instance
         getWeatherApi = retrofit.create(IWeatherRequest::class.java)
 
-        fetchData()
+        displayWeather()
     }
 
     private fun fetchData() {
+
         val compositeDisposable = CompositeDisposable()
         compositeDisposable.add(getWeatherApi.getCurrentWeather(CITY, UNITS, KEY)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { onLoading() }
+            .doFinally { onLoaded() }
             .subscribe(
-                { WeatherModel -> displayWeather(WeatherModel)},
+                { WeatherModel -> getWeatherData(WeatherModel)},
                 { onError(t = it)}
             )
         )
     }
 
-    private fun displayWeather(weather: WeatherModel) {
+    private fun getWeatherData(weather: WeatherModel) {
+
         val data = weather
 
         address.text = data.address
-        updatedAt.text = "Updated at: "+ SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(Date(data!!.updatedAt*1000))
+        updatedAt.text = "Updated at: "+ SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(Date(data.updatedAt*1000))
         status.text = data.weatherDescription[0].status.capitalize()
         temp.text = data.main.temp +"°C"
         tempFielsLike.text = "Real Feel: " + data.main.tempFielsLike + "°C"
@@ -88,5 +92,18 @@ class MainActivity : AppCompatActivity() {
         mainContainer.visibility = View.GONE
         errorText.visibility = View.VISIBLE
         errorText.text = t.message
+    }
+
+    override fun displayWeather() {
+        fetchData()
+    }
+
+    override fun onLoading() {
+        loader.visibility = View.VISIBLE
+    }
+
+    override fun onLoaded() {
+        mainContainer.visibility = View.VISIBLE
+        loader.visibility = View.GONE
     }
 }

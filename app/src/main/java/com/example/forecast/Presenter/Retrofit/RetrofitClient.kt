@@ -1,6 +1,5 @@
-package com.example.forecast.Retrofit
+package com.example.forecast.Presenter.Retrofit
 
-import com.example.forecast.Retrofit.Interceptor.client
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -14,7 +13,7 @@ object RetrofitClient {
             if (ourInstansce==null) {
                 ourInstansce = Retrofit.Builder()
                     .baseUrl("https://api.openweathermap.org/data/2.5/")
-                    .client(client)
+                    .client(Interceptor().getInterceptor())
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build()
