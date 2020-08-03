@@ -54,18 +54,17 @@ class MainActivity : AppCompatActivity(), WeatherInterface {
         val retrofit = RetrofitClient.instance
         getWeatherApi = retrofit.create(IWeatherRequest::class.java)
 
-        onLoading()
-
         displayWeather()
-
-        onLoaded()
     }
 
     private fun fetchData() {
+
         val compositeDisposable = CompositeDisposable()
         compositeDisposable.add(getWeatherApi.getCurrentWeather(CITY, UNITS, KEY)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { onLoading() }
+            .doFinally { onLoaded() }
             .subscribe(
                 { WeatherModel -> getWeatherData(WeatherModel)},
                 { onError(t = it)}
@@ -74,6 +73,7 @@ class MainActivity : AppCompatActivity(), WeatherInterface {
     }
 
     private fun getWeatherData(weather: WeatherModel) {
+
         val data = weather
 
         address.text = data.address
