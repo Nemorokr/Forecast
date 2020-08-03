@@ -1,6 +1,6 @@
-package com.example.forecast.Retrofit
+package com.example.forecast.Presenter.Retrofit
 
-import com.example.forecast.Retrofit.Interceptor.client
+import com.example.forecast.Presenter.Retrofit.Interceptor.client
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory

@@ -1,4 +1,4 @@
-package com.example.forecast.Retrofit
+package com.example.forecast.Presenter.Retrofit
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
