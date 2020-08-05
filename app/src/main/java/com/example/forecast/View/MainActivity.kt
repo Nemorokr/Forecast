@@ -5,18 +5,15 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.forecast.Model.WeatherModel
+import com.example.forecast.Presenter.IWeatherPresenter
 import com.example.forecast.R
-import com.example.forecast.Presenter.Retrofit.IWeatherRequest
-import com.example.forecast.Presenter.Retrofit.RetrofitClient
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import com.example.forecast.Presenter.WeatherPresenter
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(), WeatherInterface {
+class MainActivity : AppCompatActivity(), IWeatherView {
 
     lateinit var address: TextView
     lateinit var updatedAt: TextView
@@ -29,11 +26,7 @@ class MainActivity : AppCompatActivity(), WeatherInterface {
     lateinit var pressure: TextView
     lateinit var humidity: TextView
 
-    lateinit var getWeatherApi: IWeatherRequest
-
-    val CITY = "yekaterinburg, ru"
-    val UNITS = "metric"
-    val KEY = "4d8f0b60c4e68439a8707fb6e0878962"
+    lateinit var weatherPresenter: IWeatherPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,31 +43,20 @@ class MainActivity : AppCompatActivity(), WeatherInterface {
         pressure = findViewById(R.id.pressure)
         humidity = findViewById(R.id.humidity)
 
+        weatherPresenter = WeatherPresenter(this)
 
-        val retrofit = RetrofitClient.instance
-        getWeatherApi = retrofit.create(IWeatherRequest::class.java)
-
-        displayWeather()
+        weatherPresenter.fetchData()
     }
 
-    private fun fetchData() {
-
-        val compositeDisposable = CompositeDisposable()
-        compositeDisposable.add(getWeatherApi.getCurrentWeather(CITY, UNITS, KEY)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { onLoading() }
-            .doFinally { onLoaded() }
-            .subscribe(
-                { WeatherModel -> getWeatherData(WeatherModel)},
-                { onError(t = it)}
-            )
-        )
+    override fun onError (t: Throwable) {
+        mainContainer.visibility = View.GONE
+        errorText.visibility = View.VISIBLE
+        errorText.text = t.message
     }
 
-    private fun getWeatherData(weather: WeatherModel) {
+    override fun displayWeather(weatherModel: WeatherModel) {
 
-        val data = weather
+        val data = weatherModel
 
         address.text = data.address
         updatedAt.text = "Updated at: "+ SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(Date(data.updatedAt*1000))
@@ -86,16 +68,6 @@ class MainActivity : AppCompatActivity(), WeatherInterface {
         wind.text = data.wind.windspeed
         pressure.text = data.main.pressure
         humidity.text = data.main.humidity
-    }
-
-    private fun onError (t: Throwable) {
-        mainContainer.visibility = View.GONE
-        errorText.visibility = View.VISIBLE
-        errorText.text = t.message
-    }
-
-    override fun displayWeather() {
-        fetchData()
     }
 
     override fun onLoading() {
