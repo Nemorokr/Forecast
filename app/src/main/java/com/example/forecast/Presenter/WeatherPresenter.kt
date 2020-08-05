@@ -1,15 +1,14 @@
 package com.example.forecast.Presenter
 
-import com.example.forecast.Model.WeatherModel
-import com.example.forecast.Presenter.Interfaces.IWeatherPresenter
-import com.example.forecast.Presenter.Retrofit.IWeatherRequest
-import com.example.forecast.Presenter.Retrofit.RetrofitClient
+import com.example.forecast.Retrofit.IWeatherRequest
+import com.example.forecast.Retrofit.RetrofitClient
 import com.example.forecast.View.IWeatherView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class WeatherPresenter(val viewInterface: IWeatherView): IWeatherPresenter {
+class WeatherPresenter(val viewInterface: IWeatherView):
+    IWeatherPresenter {
 
     val CITY = "yekaterinburg, ru"
     val UNITS = "metric"

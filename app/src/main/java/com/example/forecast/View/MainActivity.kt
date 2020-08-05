@@ -5,8 +5,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.forecast.Model.WeatherModel
-import com.example.forecast.Presenter.Interfaces.IWeatherPresenter
-import com.example.forecast.Presenter.Retrofit.IWeatherRequest
+import com.example.forecast.Presenter.IWeatherPresenter
 import com.example.forecast.R
 import com.example.forecast.Presenter.WeatherPresenter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -27,13 +26,7 @@ class MainActivity : AppCompatActivity(), IWeatherView {
     lateinit var pressure: TextView
     lateinit var humidity: TextView
 
-//    lateinit var getWeatherApi: IWeatherRequest
-
     lateinit var weatherPresenter: IWeatherPresenter
-
-//    val CITY = "yekaterinburg, ru"
-//    val UNITS = "metric"
-//    val KEY = "4d8f0b60c4e68439a8707fb6e0878962"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,42 +45,8 @@ class MainActivity : AppCompatActivity(), IWeatherView {
 
         weatherPresenter = WeatherPresenter(this)
 
-//        displayWeather()
-
-//        val retrofit = RetrofitClient.instance
-//        getWeatherApi = retrofit.create(IWeatherRequest::class.java)
+        weatherPresenter.fetchData()
     }
-
-//    private fun fetchData() {
-////
-////        val compositeDisposable = CompositeDisposable()
-////        compositeDisposable.add(getWeatherApi.getCurrentWeather(CITY, UNITS, KEY)
-////            .subscribeOn(Schedulers.io())
-////            .observeOn(AndroidSchedulers.mainThread())
-////            .doOnSubscribe { onLoading() }
-////            .doFinally { onLoaded() }
-////            .subscribe(
-////                { WeatherModel -> getWeatherData(WeatherModel)},
-////                { onError(t = it)}
-////            )
-////        )
-////    }
-
-//    private fun getWeatherData(weather: WeatherModel) {
-//
-//        val data = weather
-//
-//        address.text = data.address
-//        updatedAt.text = "Updated at: "+ SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(Date(data.updatedAt*1000))
-//        status.text = data.weatherDescription[0].status.capitalize()
-//        temp.text = data.main.temp +"°C"
-//        tempFielsLike.text = "Real Feel: " + data.main.tempFielsLike + "°C"
-//        sunrise.text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(data.sys.sunrise*1000))
-//        sunset.text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(data.sys.sunset*1000))
-//        wind.text = data.wind.windspeed
-//        pressure.text = data.main.pressure
-//        humidity.text = data.main.humidity
-//    }
 
     override fun onError (t: Throwable) {
         mainContainer.visibility = View.GONE

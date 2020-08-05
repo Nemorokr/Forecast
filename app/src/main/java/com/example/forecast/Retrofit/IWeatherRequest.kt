@@ -1,4 +1,4 @@
-package com.example.forecast.Presenter.Retrofit
+package com.example.forecast.Retrofit
 
 import com.example.forecast.Model.WeatherModel
 import io.reactivex.Observable
