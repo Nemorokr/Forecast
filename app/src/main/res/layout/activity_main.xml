@@ -78,11 +78,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_alignParentBottom="true">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2">
+                android:weightSum="4">
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -140,20 +142,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14dp"
-                        tools:text="06:40 AM"/>
+                        tools:text="09:40 PM"/>
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="10dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="wrap_content"/>
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -181,7 +175,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14dp"
-                        tools:text="06:40 AM"/>
+                        tools:text="5 M/S"/>
                 </LinearLayout>
                 <Space
                     android:layout_width="10dp"
@@ -212,7 +206,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14dp"
-                        tools:text="06:40 AM"/>
+                        tools:text="60%"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
