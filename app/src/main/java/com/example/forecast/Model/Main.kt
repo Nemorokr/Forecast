@@ -7,8 +7,6 @@ data class Main(
     val temp: String,
     @SerializedName("feels_like")
     val tempFielsLike: String,
-    @SerializedName ("pressure")
-    val pressure: String,
     @SerializedName ("humidity")
     val humidity: String
 )
