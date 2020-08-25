@@ -45,11 +45,17 @@ class MainActivity : AppCompatActivity(), IWeatherView {
 
         weatherPresenter = WeatherPresenter(this)
         weatherPresenter.fetchData()
+
+        //Enable and set icon for options button
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return true
+
     }
 
     override fun onError (t: Throwable) {
@@ -69,7 +75,7 @@ class MainActivity : AppCompatActivity(), IWeatherView {
         tempFielsLike.text = "Real Feel: " + data.main.tempFielsLike + "°C"
         sunrise.text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(data.sys.sunrise*1000))
         sunset.text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(data.sys.sunset*1000))
-        wind.text = data.wind.windspeed + " m/s"
+        wind.text = data.wind.windspeed + " MPS"
         humidity.text = data.main.humidity + " %"
     }
 

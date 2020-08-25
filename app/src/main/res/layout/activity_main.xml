@@ -68,9 +68,7 @@
                     android:layout_height="wrap_content"
                     tools:text="Fiels Like: 27°C"/>
             </LinearLayout>
-
         </LinearLayout>
-
 
         <LinearLayout
             android:id="@+id/detailsContainer"
@@ -91,8 +89,7 @@
                     android:orientation="vertical"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="8dp"
-                    android:background="#3CF1EBF1">
+                    android:padding="8dp">
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
@@ -122,8 +119,7 @@
                     android:orientation="vertical"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="8dp"
-                    android:background="#3CF1EBF1">
+                    android:padding="8dp">
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
@@ -155,8 +151,7 @@
                     android:orientation="vertical"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="8dp"
-                    android:background="#3CF1EBF1">
+                    android:padding="8dp">
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
@@ -175,7 +170,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14dp"
-                        tools:text="5 M/S"/>
+                        tools:text="5 MPS"/>
                 </LinearLayout>
                 <Space
                     android:layout_width="10dp"
@@ -187,7 +182,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:padding="8dp"
-                    android:background="#3CF1EBF1">
+>
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"

@@ -9,7 +9,7 @@
     </style>
 
     <style name="CustomTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">#53B2F1</item>
+        <item name="colorPrimary">#4E93EF</item>
         <item name="colorPrimaryDark">#122259</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColor">#FFFFFF</item>
