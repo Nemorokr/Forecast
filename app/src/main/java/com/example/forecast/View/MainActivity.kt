@@ -2,10 +2,11 @@ package com.example.forecast.View
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import com.example.forecast.Model.WeatherModel
 import com.example.forecast.Presenter.IWeatherPresenter
 import com.example.forecast.R
@@ -13,7 +14,6 @@ import com.example.forecast.Presenter.WeatherPresenter
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 class MainActivity : AppCompatActivity(), IWeatherView {
 
@@ -55,7 +55,6 @@ class MainActivity : AppCompatActivity(), IWeatherView {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return true
-
     }
 
     override fun onError (t: Throwable) {
@@ -87,5 +86,18 @@ class MainActivity : AppCompatActivity(), IWeatherView {
     override fun onLoaded() {
         mainContainer.visibility = View.VISIBLE
         loader.visibility = View.GONE
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // open side menu
+        when (item.itemId) {
+            android.R.id.home -> {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START))
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                else
+                    drawerLayout.openDrawer(GravityCompat.START)
+                }
+            }
+        return super.onOptionsItemSelected(item)
     }
 }

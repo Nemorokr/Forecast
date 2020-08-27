@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/btSettings"
+        android:id="@+id/btInfo"
         android:icon="@drawable/ic_settings"
-        android:title="@string/settings"
+        android:title="@string/info"
         app:showAsAction="always"/>
 
 </menu>
