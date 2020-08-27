@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
+    tools:context=".View.MainActivity">
+
+    <include
+        layout="@layout/navigation_view"/>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
@@ -11,7 +22,7 @@
         android:id="@+id/mainContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="visible">
         <LinearLayout
             android:id="@+id/addressContainer"
             android:layout_width="match_parent"
@@ -31,7 +42,6 @@
                 android:textSize="14dp"
                 tools:text="20 April 2012, 20:08 PM"/>
         </LinearLayout>
-
 
         <LinearLayout
             android:id="@+id/overviewContainer"
@@ -68,9 +78,7 @@
                     android:layout_height="wrap_content"
                     tools:text="Fiels Like: 27°C"/>
             </LinearLayout>
-
         </LinearLayout>
-
 
         <LinearLayout
             android:id="@+id/detailsContainer"
@@ -78,19 +86,20 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_alignParentBottom="true">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="3">
+                android:weightSum="4">
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="8dp"
-                    android:background="#3CF1EBF1">
+                    android:padding="8dp">
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
@@ -120,8 +129,7 @@
                     android:orientation="vertical"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="8dp"
-                    android:background="#3CF1EBF1">
+                    android:padding="8dp">
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
@@ -140,7 +148,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14dp"
-                        tools:text="06:40 AM"/>
+                        tools:text="09:40 PM"/>
                 </LinearLayout>
 
                 <Space
@@ -153,8 +161,7 @@
                     android:orientation="vertical"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="8dp"
-                    android:background="#3CF1EBF1">
+                    android:padding="8dp">
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
@@ -173,46 +180,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14dp"
-                        tools:text="06:40 AM"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="10dp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:background="#3CF1EBF1">
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:src="@drawable/pressure"
-                        android:tint="#FFFFFF"/>
-                    <Space
-                        android:layout_width="wrap_content"
-                        android:layout_height="5dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="12dp"
-                        android:text="Pressure"/>
-                    <TextView
-                        android:id="@+id/pressure"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="14dp"
-                        tools:text="06:40 AM"/>
+                        tools:text="5 MPS"/>
                 </LinearLayout>
                 <Space
                     android:layout_width="10dp"
@@ -224,7 +192,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:padding="8dp"
-                    android:background="#3CF1EBF1">
+>
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
@@ -243,7 +211,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="14dp"
-                        tools:text="06:40 AM"/>
+                        tools:text="60%"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -267,3 +235,5 @@
 
 
 </RelativeLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>

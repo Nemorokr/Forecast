@@ -7,8 +7,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class WeatherPresenter(val viewInterface: IWeatherView):
-    IWeatherPresenter {
+class WeatherPresenter(private val viewInterface: IWeatherView): IWeatherPresenter {
 
     val CITY = "yekaterinburg, ru"
     val UNITS = "metric"

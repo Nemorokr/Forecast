@@ -1,9 +1,12 @@
 package com.example.forecast.View
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import com.example.forecast.Model.WeatherModel
 import com.example.forecast.Presenter.IWeatherPresenter
 import com.example.forecast.R
@@ -11,7 +14,6 @@ import com.example.forecast.Presenter.WeatherPresenter
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 class MainActivity : AppCompatActivity(), IWeatherView {
 
@@ -23,7 +25,6 @@ class MainActivity : AppCompatActivity(), IWeatherView {
     lateinit var sunrise: TextView
     lateinit var sunset: TextView
     lateinit var wind: TextView
-    lateinit var pressure: TextView
     lateinit var humidity: TextView
 
     lateinit var weatherPresenter: IWeatherPresenter
@@ -40,12 +41,20 @@ class MainActivity : AppCompatActivity(), IWeatherView {
         sunrise = findViewById(R.id.sunrise)
         sunset = findViewById(R.id.sunset)
         wind = findViewById(R.id.wind)
-        pressure = findViewById(R.id.pressure)
         humidity = findViewById(R.id.humidity)
 
         weatherPresenter = WeatherPresenter(this)
-
         weatherPresenter.fetchData()
+
+        //Enable and set icon for options button
+        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
     }
 
     override fun onError (t: Throwable) {
@@ -65,17 +74,30 @@ class MainActivity : AppCompatActivity(), IWeatherView {
         tempFielsLike.text = "Real Feel: " + data.main.tempFielsLike + "°C"
         sunrise.text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(data.sys.sunrise*1000))
         sunset.text = SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(data.sys.sunset*1000))
-        wind.text = data.wind.windspeed
-        pressure.text = data.main.pressure
-        humidity.text = data.main.humidity
+        wind.text = data.wind.windspeed + " MPS"
+        humidity.text = data.main.humidity + " %"
     }
 
     override fun onLoading() {
+        mainContainer.visibility = View.GONE
         loader.visibility = View.VISIBLE
     }
 
     override fun onLoaded() {
         mainContainer.visibility = View.VISIBLE
         loader.visibility = View.GONE
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // open side menu
+        when (item.itemId) {
+            android.R.id.home -> {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START))
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                else
+                    drawerLayout.openDrawer(GravityCompat.START)
+                }
+            }
+        return super.onOptionsItemSelected(item)
     }
 }
